@@ -1,0 +1,67 @@
+services:
+  # ---------- Booking app database (Laravel) ----------
+  mysql:
+    image: mysql:8.4                 # official MySQL 8.4 image
+    container_name: booking-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root      # root password inside the container (local demo only)
+      MYSQL_DATABASE: booking_app    # created automatically on first start
+      MYSQL_USER: booking_user       # app user, with access to booking_app only
+      MYSQL_PASSWORD: booking_pass
+    ports:
+      - "3310:3306"                  # container's 3306 → your Mac's 3310 (3306/3307 are used by Homebrew MySQL)
+    volumes:
+      - mysql_data:/var/lib/mysql    # keeps the data when the container restarts
+
+  # ---------- WordPress marketing site (Task 4) ----------
+  wp-db:
+    image: mysql:8.4                 # separate database, so WordPress tables never mix with the booking app's
+    container_name: booking-wp-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: wp_pass
+    volumes:
+      - wp_db_data:/var/lib/mysql    # no ports: only WordPress needs to reach it (inside Docker's network)
+
+  wordpress:
+    image: wordpress:php8.3-apache   # official WordPress image (PHP 8.3 + Apache web server)
+    container_name: booking-wordpress
+    depends_on:
+      - wp-db
+    ports:
+      - "8080:80"                    # site at http://localhost:8080
+    environment:
+      WORDPRESS_DB_HOST: wp-db       # service name = hostname inside Docker's network
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: wp_pass
+      BOOKING_APP_URL: http://localhost:5173                   # React app: opened by the visitor's browser
+      BOOKING_API_URL: http://host.docker.internal:8000/api    # Laravel API: called by WordPress itself
+                                                               # (inside Docker, host.docker.internal = your Mac)
+    volumes:
+      - wp_data:/var/www/html                                            # WordPress core files + uploads
+      - ./wordpress/booking-theme:/var/www/html/wp-content/themes/booking-theme   # our theme, edited live
+
+  # WP-CLI: WordPress's command-line tool, used to install and configure the site with commands.
+  # Not a long-running service: run it with `docker compose run --rm wpcli <command>`.
+  wpcli:
+    image: wordpress:cli-php8.3
+    depends_on:
+      - wordpress
+    user: "33:33"                    # same user as the web server (www-data), so file permissions match
+    environment:
+      WORDPRESS_DB_HOST: wp-db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: wp_pass
+    volumes:
+      - wp_data:/var/www/html
+      - ./wordpress/booking-theme:/var/www/html/wp-content/themes/booking-theme
+    profiles: ["tools"]              # not started by `docker compose up`
+
+volumes:
+  mysql_data:
+  wp_db_data:
+  wp_data:

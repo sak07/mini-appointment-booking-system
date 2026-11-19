@@ -1,0 +1,130 @@
+/*
+Theme Name: BookEasy
+Description: Custom theme for the BookEasy appointment booking business. Landing page with services and prices read live from the booking app (Laravel API), and links to the React booking app.
+Version: 1.2.0
+Requires PHP: 8.1
+Text Domain: bookeasy
+*/
+
+/* Same palette and fonts as the React booking app (navy + sand), so both feel like one business.
+   Fonts are loaded in functions.php. */
+:root {
+  --sand: #f5f3ee;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --muted: #5b6474;
+  --line: #e4ded3;
+  --navy: #1e3a8a;
+  --navy-dark: #172554;
+  --navy-tint: #e8ecf7;
+  --font-heading: 'Bricolage Grotesque', Georgia, serif;
+  --font-body: 'Figtree', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;               /* with main { flex: 1 } this keeps the footer at the bottom */
+  flex-direction: column;
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--sand);
+  -webkit-font-smoothing: antialiased;
+}
+main { flex: 1; }
+p { margin: 0 0 10px; }
+a { color: var(--navy); text-underline-offset: 3px; }
+img { max-width: 100%; height: auto; }
+h1, h2, h3 { font-family: var(--font-heading); font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; margin: 0 0 10px; }
+:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+.container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+.muted { color: var(--muted); }
+
+/* ---------- Header ---------- */
+.site-header { background: var(--surface); border-bottom: 1px solid var(--line); }
+.site-header .container { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; padding-top: 16px; padding-bottom: 16px; }
+.site-title { font-family: var(--font-heading); color: var(--navy); font-weight: 700; font-size: 1.4rem; text-decoration: none; }
+.site-nav { display: flex; flex-wrap: wrap; gap: 6px 22px; align-items: center; }
+.site-nav a { color: var(--ink); text-decoration: none; font-weight: 500; }
+.site-nav a:hover { color: var(--navy); }
+.site-nav a.button { color: #fff; }
+
+/* ---------- Buttons ---------- */
+.button {
+  display: inline-block;
+  background: var(--navy);
+  color: #fff;
+  border: 1px solid var(--navy);
+  padding: 12px 22px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.button:hover { background: var(--navy-dark); border-color: var(--navy-dark); color: #fff; }
+.button.light { background: #fff; color: var(--navy); border-color: #fff; }
+.button.light:hover { background: var(--navy-tint); color: var(--navy-dark); }
+.button.small { padding: 8px 16px; font-size: 0.95rem; }
+
+/* ---------- Hero ---------- */
+.hero { background: var(--navy); color: #fff; padding: 72px 0; }
+.hero h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); max-width: 14ch; margin-bottom: 16px; }
+.hero p { font-size: 1.15rem; max-width: 52ch; margin: 0 0 28px; color: #dbe3f5; }
+
+/* ---------- Sections ---------- */
+.section { padding: 56px 0; }
+.section h2 { font-size: 1.9rem; }
+.section .lead { color: var(--muted); margin-bottom: 28px; max-width: 56ch; }
+.section.alt { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+/* ---------- Services as a price list (same as the booking app) ---------- */
+.price-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.price-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px 32px; align-items: center; padding: 22px 0; border-bottom: 1px solid var(--line); }
+.price-row h3 { font-size: 1.3rem; margin: 0; }
+.price-row h3 a { color: var(--ink); text-decoration: none; }
+.price-row h3 a:hover { color: var(--navy); text-decoration: underline; }
+.price-row .excerpt { margin: 4px 0 0; color: var(--muted); max-width: 52ch; }
+.notice { padding: 14px 16px; border-radius: 8px; background: #fdf3dc; border: 1px solid #f1d9a6; color: #7a4d00; }
+.section { scroll-margin-top: 16px; }
+.price-meta { display: flex; gap: 20px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.price-meta .duration { color: var(--muted); }
+.price-meta .price { font-weight: 600; min-width: 72px; text-align: right; }
+
+/* ---------- How it works (a real 3-step sequence, so numbers make sense) ---------- */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; counter-reset: step; }
+.steps li { counter-increment: step; }
+.steps li::before { content: counter(step); display: block; font-family: var(--font-heading); font-weight: 700; font-size: 2.2rem; color: var(--navy); line-height: 1; margin-bottom: 10px; }
+.steps h3 { font-size: 1.15rem; margin-bottom: 4px; }
+.steps p { color: var(--muted); margin: 0; }
+
+/* ---------- Call to action ---------- */
+.cta { padding: 56px 0; }
+.cta .container { display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between; }
+.cta h2 { margin: 0; font-size: 1.7rem; }
+
+/* ---------- Single service / generic pages ---------- */
+.content { padding: 48px 0 64px; max-width: 640px; }
+/* Back button (same as the booking app) */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-bottom: 24px; padding: 8px 14px 8px 10px; border-radius: 8px;
+  background: var(--navy-tint); color: var(--navy); font-weight: 600; text-decoration: none;
+}
+.back-link:hover { background: #d9e0f2; color: var(--navy-dark); }
+.facts { display: flex; gap: 32px; margin: 24px 0 28px; padding: 0; }
+.facts dt { color: var(--muted); font-size: 0.9rem; }
+.facts dd { margin: 0; font-weight: 600; font-size: 1.1rem; }
+
+/* ---------- Footer ---------- */
+.site-footer { background: var(--surface); border-top: 1px solid var(--line); color: var(--muted); padding: 28px 0; font-size: 0.95rem; }
+.site-footer .container { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+.site-footer p { margin: 0; }
+
+@media (max-width: 720px) {
+  .hero { padding: 48px 0; }
+  .price-row { grid-template-columns: 1fr auto; }
+  .price-row .price-info { grid-column: 1 / -1; }
+}
